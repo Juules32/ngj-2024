@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvjm2hig7e8e5"]
+
+[ext_resource type="Script" path="res://node.gd" id="1_h10w8"]
+
+[node name="Node" type="Node2D"]
+rotation = -0.120428
+script = ExtResource("1_h10w8")
