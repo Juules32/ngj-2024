@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dypvoos7veqja"]
+
+[ext_resource type="Script" path="res://Dementia.gd" id="1_d26f3"]
+[ext_resource type="PackedScene" uid="uid://b6jagvyo43c26" path="res://health_component.tscn" id="2_b7kcc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_whulp"]
+radius = 12.3
+
+[node name="Dementia" type="Area2D"]
+script = ExtResource("1_d26f3")
+
+[node name="DestroyNewNode" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_whulp")
+
+[node name="HealthComponent" parent="." instance=ExtResource("2_b7kcc")]
+hp = 300
+
+[connection signal="timeout" from="DestroyNewNode" to="." method="_on_destroy_new_node_timeout"]

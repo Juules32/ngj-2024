@@ -1,0 +1,308 @@
+[gd_scene load_steps=19 format=3 uid="uid://bxy5r1p1bgyla"]
+
+[ext_resource type="Script" path="res://game.gd" id="1_2u0qc"]
+[ext_resource type="Script" path="res://player.gd" id="2_73sxd"]
+[ext_resource type="Script" path="res://DirectionNode.gd" id="2_128mw"]
+[ext_resource type="Texture2D" uid="uid://brex52sw6323e" path="res://background.jpg" id="2_cpesv"]
+[ext_resource type="Texture2D" uid="uid://dp8uekrekrpat" path="res://light.png" id="3_qo1st"]
+[ext_resource type="PackedScene" uid="uid://dvjm2hig7e8e5" path="res://node.tscn" id="4_0merv"]
+[ext_resource type="PackedScene" uid="uid://6ogwla4snice" path="res://edge.tscn" id="5_vnved"]
+[ext_resource type="Script" path="res://Overlay.gd" id="7_58p4d"]
+[ext_resource type="AudioStream" uid="uid://bka024dynrmm5" path="res://pop.wav" id="9_bjmpt"]
+[ext_resource type="Script" path="res://Label.gd" id="9_cihbu"]
+[ext_resource type="AudioStream" uid="uid://b3s7d4of3fp3h" path="res://BGM.wav" id="11_yiial"]
+[ext_resource type="Texture2D" uid="uid://u14hceroirom" path="res://effect.JPG" id="12_8vyoc"]
+[ext_resource type="AudioStream" uid="uid://0lofievyhvvg" path="res://death_sound.mp3" id="12_evvhy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pkt1t"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1y8y1"]
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+shadow_size = 3
+shadow_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_jom2n"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6avt3"]
+gradient = SubResource("Gradient_jom2n")
+fill_to = Vector2(0, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6l78a"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_2u0qc")
+
+[node name="Player" type="Node2D" parent="."]
+z_index = 3
+script = ExtResource("2_73sxd")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position_smoothing_enabled = true
+
+[node name="PointLight2D" type="PointLight2D" parent="Player"]
+scale = Vector2(16, 2)
+energy = 0.0
+shadow_enabled = true
+texture = ExtResource("3_qo1st")
+offset = Vector2(50, 0)
+texture_scale = 0.1
+
+[node name="LightArea" type="Area2D" parent="Player"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player/LightArea"]
+polygon = PackedVector2Array(51, -23, 1595, -83, 1595, 70, 51, 27)
+
+[node name="PlayerArea" type="Area2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/PlayerArea"]
+shape = SubResource("CircleShape2D_pkt1t")
+
+[node name="DirectionNode" type="Node2D" parent="Player"]
+script = ExtResource("2_128mw")
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -5
+texture = ExtResource("2_cpesv")
+region_rect = Rect2(0, 0, 6016, 4000)
+
+[node name="Nodes" type="Node2D" parent="."]
+
+[node name="Node" parent="Nodes" instance=ExtResource("4_0merv")]
+
+[node name="Edges" type="Node2D" parent="."]
+
+[node name="Edge" parent="Edges" instance=ExtResource("5_vnved")]
+
+[node name="NodeRechargeSpeed" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="Overlay"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="UI" type="Node2D" parent="Overlay/Control"]
+script = ExtResource("7_58p4d")
+
+[node name="Control2" type="Control" parent="Overlay"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TimeElapsed" type="Label" parent="Overlay/Control2"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 20.0
+offset_right = 235.0
+offset_bottom = 120.0
+text = "Time"
+label_settings = SubResource("LabelSettings_1y8y1")
+script = ExtResource("9_cihbu")
+
+[node name="Pop" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_bjmpt")
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_yiial")
+autoplay = true
+
+[node name="DeathScreen" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DeathScreen"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -173.5
+offset_top = -137.0
+offset_right = 173.5
+offset_bottom = 137.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="DeathScreen/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center]YOU DIED[/center]"
+
+[node name="Record" type="RichTextLabel" parent="DeathScreen/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center]After XXX.XX Seconds..[/center]"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DeathScreen/VBoxContainer"]
+layout_direction = 1
+layout_mode = 2
+
+[node name="TryAgain" type="Button" parent="DeathScreen/VBoxContainer/HBoxContainer"]
+layout_direction = 2
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Try Again"
+
+[node name="Quit" type="Button" parent="DeathScreen/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Quit"
+
+[node name="PointLight2D" type="PointLight2D" parent="DeathScreen/VBoxContainer"]
+position = Vector2(163.5, 80)
+scale = Vector2(47.375, 22.3125)
+blend_mode = 1
+texture = SubResource("GradientTexture2D_6avt3")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_evvhy")
+
+[node name="Menu" type="CanvasLayer" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -173.5
+offset_top = -137.0
+offset_right = 173.5
+offset_bottom = 137.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center]BRAIN INVADER[/center]"
+
+[node name="Record" type="RichTextLabel" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center]A game about creating and preserving memories...[/center]"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Menu/VBoxContainer"]
+layout_direction = 1
+layout_mode = 2
+
+[node name="Play" type="Button" parent="Menu/VBoxContainer/HBoxContainer"]
+layout_direction = 2
+layout_mode = 2
+focus_neighbor_right = NodePath("../Tutorial")
+theme_override_font_sizes/font_size = 23
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6l78a")
+text = "Play"
+
+[node name="Tutorial" type="CheckBox" parent="Menu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Tutorial"
+
+[node name="PointLight2D" type="PointLight2D" parent="Menu/VBoxContainer"]
+position = Vector2(163.5, 167)
+scale = Vector2(47.375, 25.0313)
+blend_mode = 1
+texture = SubResource("GradientTexture2D_6avt3")
+
+[node name="TutorialTimer1" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="TutorialLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="TutorialLayer"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -385.0
+offset_top = -258.0
+offset_right = 385.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 0.137255)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TutorialLayer"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -181.0
+offset_top = -62.0
+offset_right = 181.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="TutorialLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Template Tutorial Text"
+
+[node name="Button" type="Button" parent="TutorialLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 25
+text = "Ok"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TutorialLayer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="TutorialTimer2" type="Timer" parent="."]
+wait_time = 7.0
+one_shot = true
+
+[node name="TutorialTimer3" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.0823529)
+position = Vector2(147.5, 113)
+scale = Vector2(2.13031, 1.51437)
+texture = ExtResource("12_8vyoc")
+
+[node name="TimerGrabbingFocus" type="Timer" parent="."]
+wait_time = 0.7
+one_shot = true
+
+[connection signal="timeout" from="NodeRechargeSpeed" to="." method="_on_node_recharge_speed_timeout"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_spawn_speed_timeout"]
+[connection signal="finished" from="BGM" to="." method="_on_bgm_finished"]
+[connection signal="button_down" from="DeathScreen/VBoxContainer/HBoxContainer/TryAgain" to="." method="_on_try_again_button_down"]
+[connection signal="button_down" from="DeathScreen/VBoxContainer/HBoxContainer/TryAgain" to="DeathScreen/VBoxContainer/HBoxContainer/TryAgain" method="_on_button_down"]
+[connection signal="button_down" from="DeathScreen/VBoxContainer/HBoxContainer/Quit" to="." method="_on_quit_button_down"]
+[connection signal="button_down" from="DeathScreen/VBoxContainer/HBoxContainer/Quit" to="DeathScreen/VBoxContainer/HBoxContainer/Quit" method="_on_button_down"]
+[connection signal="button_down" from="Menu/VBoxContainer/HBoxContainer/Play" to="." method="_on_play_button_down"]
+[connection signal="timeout" from="TutorialTimer1" to="." method="_on_tutorial_timer_1_timeout"]
+[connection signal="button_down" from="TutorialLayer/VBoxContainer/Button" to="." method="_on_button_button_down"]
+[connection signal="timeout" from="TutorialTimer2" to="." method="_on_tutorial_timer_2_timeout"]
+[connection signal="timeout" from="TutorialTimer3" to="." method="_on_tutorial_timer_3_timeout"]
+[connection signal="timeout" from="TimerGrabbingFocus" to="." method="_on_timer_grabbing_focus_timeout"]
