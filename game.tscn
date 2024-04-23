@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://Overlay.gd" id="7_58p4d"]
 [ext_resource type="AudioStream" uid="uid://bka024dynrmm5" path="res://pop.wav" id="9_bjmpt"]
 [ext_resource type="Script" path="res://Label.gd" id="9_cihbu"]
-[ext_resource type="AudioStream" uid="uid://b3s7d4of3fp3h" path="res://BGM.wav" id="11_yiial"]
+[ext_resource type="AudioStream" uid="uid://dw3vwvhoyhb0t" path="res://ban.wav" id="11_yiial"]
 [ext_resource type="Texture2D" uid="uid://u14hceroirom" path="res://effect.JPG" id="12_8vyoc"]
 [ext_resource type="AudioStream" uid="uid://0lofievyhvvg" path="res://death_sound.mp3" id="12_evvhy"]
 
